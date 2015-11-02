@@ -1,0 +1,17 @@
+name: 'kafka_shell'
+version: 1.0.0-dev
+description: Kafka Shell
+author: Anatoly Pulyaevskiy <anatoly.pulyaevskiy@gmail.com>
+
+environment:
+  sdk: '>=1.0.0 <2.0.0'
+
+dependencies:
+  args: "^0.13.2"
+  kafka:
+    git: https://github.com/pulyaevskiy/dart-kafka.git
+  dlog: "^0.0.5"
+  colorize: "^0.1.2"
+
+dev_dependencies:
+  test: "^0.12.4+7"

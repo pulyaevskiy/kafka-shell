@@ -1,0 +1,6 @@
+.pub/
+bin/
+doc/
+packages
+.packages
+*.snapshot
