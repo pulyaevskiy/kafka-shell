@@ -20,6 +20,9 @@ part 'src/commands/topics.dart';
 part 'src/commands/partitions.dart';
 part 'src/commands/offsets.dart';
 
+part 'src/view/topics.dart';
+part 'src/view/partitions.dart';
+
 void writeError(Stdout output, String text) {
   Colorize err = new Colorize(text);
   err.red();
@@ -37,10 +40,10 @@ class KafkaShell {
 
   Future run() async {
     print('KafkaShell v1.0.0-dev');
-    var client =
-        new KafkaClient([new KafkaHost(config['host'], config['port'])]);
+    var session =
+        new KafkaSession([new KafkaHost(config['host'], config['port'])]);
 
-    var meta = await client.getMetadata();
+    var meta = await session.getMetadata();
     var info = new Colorize(
         "Connected to Kafka cluster with ${meta.brokers.length} brokers.");
     info.green();
@@ -49,11 +52,11 @@ class KafkaShell {
     _shell
       ..addCommand('help', new HelpCommand(_shell))
       ..addCommand('exit', new ExitCommand(_shell))
-      ..addCommand('use', new UseCommand(client, context, _shell))
-      ..addCommand('brokers', new BrokersCommand(client))
-      ..addCommand('topics', new TopicsCommand(client))
-      ..addCommand('partitions', new PartitionsCommand(client, context))
-      ..addCommand('offsets', new OffsetsCommand(client, context));
+      ..addCommand('use', new UseCommand(session, context, _shell))
+      ..addCommand('brokers', new BrokersCommand(session))
+      ..addCommand('topics', new TopicsCommand(session))
+      ..addCommand('partitions', new PartitionsCommand(session, context))
+      ..addCommand('offsets', new OffsetsCommand(session, context));
 
     _shell.run();
   }

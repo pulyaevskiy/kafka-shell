@@ -41,6 +41,8 @@ class ShellInput {
 
   Map _handlers;
 
+  bool _submitInProgress = false;
+
   ShellInput(this.onSubmit, {ShellPrompt prompt}) {
     if (prompt == null) {
       this.prompt = new BasicShellPrompt('\$ ');
@@ -66,6 +68,8 @@ class ShellInput {
 
     _printPrompt();
     stdin.asBroadcastStream().listen((List<int> _) async {
+      if (_submitInProgress) return;
+
       var str;
       try {
         str = ASCII.decode(_);
@@ -96,12 +100,17 @@ class ShellInput {
 
   _handleReturn(String key) async {
     stdout.write(key);
-    var result = onSubmit(_value);
-    if (result is Future) {
-      await result;
+    try {
+      _submitInProgress = true;
+      var result = onSubmit(_value);
+      if (result is Future) {
+        await result;
+      }
+    } finally {
+      _submitInProgress = false;
+      _value = '';
+      cursor.position = 0;
     }
-    _value = '';
-    cursor.position = 0;
     _printPrompt();
   }
 

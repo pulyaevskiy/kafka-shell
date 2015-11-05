@@ -1,13 +1,13 @@
 part of kafka_shell;
 
 class BrokersCommand implements ShellCommand {
-  final KafkaClient client;
+  final KafkaSession session;
 
-  BrokersCommand(this.client);
+  BrokersCommand(this.session);
 
   @override
-  Future execute(String input, Stdout output) async {
-    var response = await client.getMetadata();
+  Future execute(List<String> args, Stdout output) async {
+    var response = await session.getMetadata();
     var table = new Table(3);
     table.columns.add('ID');
     table.columns.add('Host');
@@ -31,9 +31,9 @@ class BrokersCommand implements ShellCommand {
   }
 
   @override
-  Future<List<AutocompleteOption>> autocomplete(String input) {
+  Future<List<AutocompleteOption>> autocomplete(List<String> args) {
     var list = new List<AutocompleteOption>();
-    if ('brokers'.startsWith(input)) {
+    if (args.length == 1 && 'brokers'.startsWith(args.first)) {
       list.add(new AutocompleteOption('brokers', 'brokers'));
     }
     return new Future.value(list);

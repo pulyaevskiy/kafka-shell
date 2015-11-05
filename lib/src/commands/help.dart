@@ -6,12 +6,11 @@ class HelpCommand implements ShellCommand {
   HelpCommand(this.shell);
 
   @override
-  void execute(String input, Stdout output) {
-    var list = input.trim().split(' ');
-    if (list.length == 1) {
+  void execute(List<String> args, Stdout output) {
+    if (args.length == 1) {
       shell.commands.values.forEach((c) => output.writeln(c.signature()));
-    } else if (list.length == 2) {
-      var command = list.last;
+    } else if (args.length == 2) {
+      var command = args.last;
       if (shell.commands.containsKey(command)) {
         shell.commands[command].writeHelp(output);
       } else {
@@ -33,9 +32,9 @@ class HelpCommand implements ShellCommand {
   }
 
   @override
-  Future<List<AutocompleteOption>> autocomplete(String input) {
+  Future<List<AutocompleteOption>> autocomplete(List<String> args) {
     var list = new List<AutocompleteOption>();
-    if ('help'.startsWith(input)) {
+    if (args.length == 1 && 'help'.startsWith(args.first)) {
       list.add(new AutocompleteOption('help', 'help'));
     }
     return new Future.value(list);

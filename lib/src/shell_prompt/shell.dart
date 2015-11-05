@@ -1,14 +1,14 @@
 part of shell_prompt;
 
 abstract class ShellCommand {
-  void execute(String input, Stdout output);
+  void execute(List<String> args, Stdout output);
 
   String signature();
   void writeHelp(Stdout output);
 
   /// Called whenever user requests autocomplete. Must return list of possible
   /// options.
-  Future<List<AutocompleteOption>> autocomplete(String input);
+  Future<List<AutocompleteOption>> autocomplete(List<String> args);
 }
 
 class Shell {
@@ -24,18 +24,24 @@ class Shell {
   Future<List<AutocompleteOption>> onAutocomplete(String input) async {
     var options = new List();
     for (var command in commands.values) {
-      var sublist = await command.autocomplete(input);
+      var sublist = await command.autocomplete(_getArgs(input));
       options.addAll(sublist);
     }
     return options;
   }
 
+  List<String> _getArgs(String input) {
+    var list = input.trim().split(' ').toList();
+    list.removeWhere((s) => s.isEmpty);
+    return list;
+  }
+
   onSubmit(String value) {
     if (value.isNotEmpty) {
-      var list = value.trim().split(' ');
+      var list = _getArgs(value);
       var cmd = list.first.trim();
       if (commands.containsKey(cmd)) {
-        return commands[cmd].execute(value, stdout);
+        return commands[cmd].execute(_getArgs(value), stdout);
       } else {
         Colorize err = new Colorize('ERR: No such command.');
         err.red();

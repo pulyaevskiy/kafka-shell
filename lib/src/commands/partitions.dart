@@ -1,58 +1,39 @@
 part of kafka_shell;
 
 class PartitionsCommand implements ShellCommand {
-  final KafkaClient client;
+  final KafkaSession session;
   final SharedContext context;
 
-  PartitionsCommand(this.client, this.context);
+  PartitionsCommand(this.session, this.context);
 
   @override
-  Future execute(String input, Stdout output) async {
+  Future execute(List<String> args, Stdout output) async {
     if (context.topic.isEmpty) {
-      writeError(output, 'ERR: Must specify or `use` topic.');
+      writeError(output, 'ERR: Must `use` topic first.');
       return;
     }
 
     var topic = context.topic;
-    var meta = await client.getMetadata();
-    var table = new Table(5);
-    table.columns.add('ID');
-    table.columns.add('Error');
-    table.columns.add('Leader');
-    table.columns.add('Replicas');
-    table.columns.add('ISR');
-    var partitions = meta.getTopicMetadata(topic).partitionsMetadata;
-    partitions.sort((a, b) => a.partitionId.compareTo(b.partitionId));
-    partitions.forEach((p) {
-      table.data.addAll([
-        p.partitionId,
-        p.partitionErrorCode,
-        p.leader,
-        p.replicas,
-        p.inSyncReplicas
-      ]);
-    });
-    output.write(table);
+    var meta = await session.getMetadata();
+    output.write(new PartitionsView(meta.getTopicMetadata(topic)));
   }
 
   @override
   void writeHelp(Stdout output) {
-    output.writeln('Usage: partitions [<topic>] [<partition>]');
+    output.writeln('Usage: partitions');
     output.writeln('');
-    output.writeln('Shows information about partitions of particular topic.');
-    output.writeln('If you `use`d one of the topics you can omit topic name');
-    output.writeln('in this command, the `use`d one will be the default.');
+    output.writeln('Shows information about partitions of current topic.');
   }
 
   @override
   String signature() {
-    return 'partitions - Shows information about available commands';
+    return 'partitions - Shows information about partitions of current topic';
   }
 
   @override
-  Future<List<AutocompleteOption>> autocomplete(String input) {
+  Future<List<AutocompleteOption>> autocomplete(List<String> args) {
     var list = new List<AutocompleteOption>();
-    if ('partitions'.startsWith(input)) {
+    if (args.length == 1 && 'partitions'.startsWith(args.first)) {
       list.add(new AutocompleteOption('partitions', 'partitions'));
     }
     return new Future.value(list);

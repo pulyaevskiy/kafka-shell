@@ -4,7 +4,7 @@ packages:
   analyzer:
     description: analyzer
     source: hosted
-    version: "0.26.1+17"
+    version: "0.26.2+1"
   args:
     description: args
     source: hosted
@@ -32,7 +32,7 @@ packages:
   convert:
     description: convert
     source: hosted
-    version: "1.0.0"
+    version: "1.0.1"
   crypto:
     description: crypto
     source: hosted
@@ -64,7 +64,7 @@ packages:
   kafka:
     description:
       ref: null
-      resolved-ref: ccb8117b5b180c87dcb0961361ce0aa5eaa6e25d
+      resolved-ref: "9b4203816f3ec5a2bf70a913b5cad1162de8c1ad"
       url: "https://github.com/pulyaevskiy/dart-kafka.git"
     source: git
     version: "1.0.0-dev"
@@ -99,11 +99,7 @@ packages:
   pub_semver:
     description: pub_semver
     source: hosted
-    version: "1.2.2"
-  semver:
-    description: semver
-    source: hosted
-    version: "0.2.1"
+    version: "1.2.3"
   shelf:
     description: shelf
     source: hosted
@@ -131,7 +127,7 @@ packages:
   stack_trace:
     description: stack_trace
     source: hosted
-    version: "1.4.2"
+    version: "1.5.0"
   string_scanner:
     description: string_scanner
     source: hosted
@@ -144,10 +140,6 @@ packages:
     description: typed_data
     source: hosted
     version: "1.1.1"
-  unittest:
-    description: unittest
-    source: hosted
-    version: "0.11.6+1"
   utf:
     description: utf
     source: hosted

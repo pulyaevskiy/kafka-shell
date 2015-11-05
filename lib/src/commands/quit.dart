@@ -6,7 +6,7 @@ class ExitCommand implements ShellCommand {
   ExitCommand(this.shell);
 
   @override
-  void execute(String input, Stdout output) {
+  void execute(List<String> args, Stdout output) {
     output.writeln('Bye');
     exit(0);
   }
@@ -24,9 +24,9 @@ class ExitCommand implements ShellCommand {
   }
 
   @override
-  Future<List<AutocompleteOption>> autocomplete(String input) {
+  Future<List<AutocompleteOption>> autocomplete(List<String> args) {
     var list = new List<AutocompleteOption>();
-    if ('exit'.startsWith(input)) {
+    if (args.length == 1 && 'exit'.startsWith(args.first)) {
       list.add(new AutocompleteOption('exit', 'exit'));
     }
     return new Future.value(list);

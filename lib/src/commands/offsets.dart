@@ -1,14 +1,13 @@
 part of kafka_shell;
 
 class OffsetsCommand implements ShellCommand {
-  final KafkaClient client;
+  final KafkaSession session;
   final SharedContext context;
 
-  OffsetsCommand(this.client, this.context);
+  OffsetsCommand(this.session, this.context);
 
   @override
-  Future execute(String input, Stdout output) async {
-    var args = _getArgs(input);
+  Future execute(List<String> args, Stdout output) async {
     if ([2, 3].contains(args.length) == false) {
       printUsage(output);
       return;
@@ -23,7 +22,7 @@ class OffsetsCommand implements ShellCommand {
       return;
     }
 
-    var metadata = await client.getMetadata();
+    var metadata = await session.getMetadata();
 
     var topicMeta = metadata.topicMetadata
         .firstWhere((t) => t.topicName == topic, orElse: () => null);
@@ -91,7 +90,7 @@ class OffsetsCommand implements ShellCommand {
       var broker = metadata.getBroker(p.leader);
       var host = new KafkaHost(broker.host, broker.port);
       if (requests.containsKey(host) == false) {
-        requests[host] = new OffsetRequest(client, host, broker.nodeId);
+        requests[host] = new OffsetRequest(session, host, broker.nodeId);
       }
       requests[host].addTopicPartition(topic.topicName, p.partitionId, time, 1);
     }
@@ -104,12 +103,6 @@ class OffsetsCommand implements ShellCommand {
     }
 
     return result;
-  }
-
-  List<String> _getArgs(String input) {
-    var list = input.trim().split(' ').toList();
-    list.removeWhere((s) => s.isEmpty);
-    return list;
   }
 
   void printUsage(Stdout output) {
@@ -129,23 +122,12 @@ class OffsetsCommand implements ShellCommand {
   }
 
   @override
-  Future<List<AutocompleteOption>> autocomplete(String input) async {
+  Future<List<AutocompleteOption>> autocomplete(List<String> args) async {
     var options = new List<AutocompleteOption>();
-    if ('offsets'.startsWith(input)) {
+    if (args.length == 1 && 'offsets'.startsWith(args.first)) {
       options.add(new AutocompleteOption('offsets', 'offsets'));
-    } else if (input.startsWith('offsets ')) {
-      var list = _getArgs(input);
-      if (list.length == 2) {
-        var meta = await client.getMetadata();
-        for (var topic in meta.topicMetadata) {
-          if (topic.topicName.toLowerCase().startsWith(list.last) &&
-              topic.topicName != list.last) {
-            options.add(new AutocompleteOption(
-                topic.topicName, 'offsets ${topic.topicName}'));
-          }
-        }
-      }
     }
+
     return new Future.value(options);
   }
 }
