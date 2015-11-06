@@ -3,11 +3,10 @@ part of kafka_shell;
 class UseCommand implements ShellCommand {
   final KafkaSession session;
   final SharedContext context;
-  final Shell shell;
 
   MetadataResponse _metadata;
 
-  UseCommand(this.session, this.context, this.shell);
+  UseCommand(this.session, this.context);
 
   @override
   Future execute(List<String> args, Stdout output) async {

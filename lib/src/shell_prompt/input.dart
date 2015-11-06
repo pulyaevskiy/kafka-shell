@@ -123,10 +123,7 @@ class ShellInput {
       _beep();
       return;
     }
-    var options = onAutocomplete(_value);
-    if (options is Future) {
-      options = await options;
-    }
+    List<AutocompleteOption> options = await onAutocomplete(_value);
     if (options.isEmpty) {
       _beep();
       return;

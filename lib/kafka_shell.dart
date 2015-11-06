@@ -22,6 +22,7 @@ part 'src/commands/offsets.dart';
 
 part 'src/view/topics.dart';
 part 'src/view/partitions.dart';
+part 'src/view/offsets.dart';
 
 void writeError(Stdout output, String text) {
   Colorize err = new Colorize(text);
@@ -39,7 +40,7 @@ class KafkaShell {
   }
 
   Future run() async {
-    print('KafkaShell v1.0.0-dev');
+    print('Kafka Shell v1.0.0-dev');
     var session =
         new KafkaSession([new KafkaHost(config['host'], config['port'])]);
 
@@ -52,7 +53,7 @@ class KafkaShell {
     _shell
       ..addCommand('help', new HelpCommand(_shell))
       ..addCommand('exit', new ExitCommand(_shell))
-      ..addCommand('use', new UseCommand(session, context, _shell))
+      ..addCommand('use', new UseCommand(session, context))
       ..addCommand('brokers', new BrokersCommand(session))
       ..addCommand('topics', new TopicsCommand(session))
       ..addCommand('partitions', new PartitionsCommand(session, context))

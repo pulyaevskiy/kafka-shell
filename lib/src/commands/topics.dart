@@ -19,15 +19,24 @@ class TopicsCommand implements ShellCommand {
     }
 
     if (args.length == 3 && ['offsets', 'partitions'].contains(args.last)) {
+      var meta = await session.getMetadata();
+      var topic = meta.topicMetadata
+          .firstWhere((t) => t.topicName == args[1], orElse: () => null);
+      if (topic == null) {
+        output.writeln('ERR: No such topic.');
+      }
       if (args.last == 'partitions') {
-        var meta = await session.getMetadata();
-        var topic = meta.topicMetadata
-            .firstWhere((t) => t.topicName == args[1], orElse: () => null);
-        if (topic is TopicMetadata) {
-          output.write(new PartitionsView(topic));
-        } else {
-          output.writeln('ERR: No such topic.');
-        }
+        output.write(new PartitionsView(topic));
+      } else {
+        // offsets
+        var topicPartitions = new Map();
+        topicPartitions[topic.topicName] =
+            new List.generate(topic.partitionsMetadata.length, (i) => i);
+        var master = new OffsetMaster(session);
+        var earliestOffsets = await master.fetchEarliest(topicPartitions);
+        var latestOffsets = await master.fetchLatest(topicPartitions);
+
+        output.write(new OffsetsView(topic, earliestOffsets, latestOffsets));
       }
     } else {
       output.writeln('Usage: topics [<topic> offsets|partitions]');
@@ -52,7 +61,7 @@ class TopicsCommand implements ShellCommand {
     var options = new List<AutocompleteOption>();
     if (args.length == 1 && 'topics'.startsWith(args.first)) {
       options.add(new AutocompleteOption('topics', 'topics'));
-    } else if (args.length == 2) {
+    } else if (args.length == 2 && args.first == 'topics') {
       var meta = await session.getMetadata();
       var topics = meta.topicMetadata.map((t) => t.topicName);
       for (String topic in topics) {
@@ -62,7 +71,7 @@ class TopicsCommand implements ShellCommand {
           options.add(new AutocompleteOption(topic, value.join(' ')));
         }
       }
-    } else if (args.length == 3) {
+    } else if (args.length == 3 && args.first == 'topics') {
       for (var command in ['offsets', 'partitions']) {
         if (command.startsWith(args.last)) {
           var value = args.toList();

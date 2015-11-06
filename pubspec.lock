@@ -64,7 +64,7 @@ packages:
   kafka:
     description:
       ref: null
-      resolved-ref: "9b4203816f3ec5a2bf70a913b5cad1162de8c1ad"
+      resolved-ref: "0f4a1fc07968f852a65aee08acbdf5f2c305d4c2"
       url: "https://github.com/pulyaevskiy/dart-kafka.git"
     source: git
     version: "1.0.0-dev"
