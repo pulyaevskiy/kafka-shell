@@ -102,7 +102,13 @@ class ShellInput {
       _submitInProgress = true;
       var result = onSubmit(_value);
       if (result is Future) {
-        await result;
+        result.catchError((e) {
+          stdout.writeln(e);
+        }).whenComplete(() {
+          _submitInProgress = false;
+          _value = '';
+          cursor.position = 0;
+        });
       }
     } finally {
       _submitInProgress = false;
