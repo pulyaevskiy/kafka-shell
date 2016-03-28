@@ -18,7 +18,13 @@ main(List<String> arguments) async {
 
   try {
     var shell = new KafkaShell(config);
-    shell.run();
+    shell.run().then((_) {
+      exit(0);
+    }, onError: (e, StackTrace trace) {
+      print(e);
+      print(trace);
+      exit(1);
+    });
   } catch (e) {
     print(e);
     exit(1);
