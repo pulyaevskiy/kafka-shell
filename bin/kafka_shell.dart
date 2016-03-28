@@ -24,5 +24,8 @@ main(List<String> arguments) async {
     print(e);
     print(trace);
     exit(1);
+  }).whenComplete(() {
+    stdin.echoMode = true;
+    stdin.lineMode = true;
   });
 }
