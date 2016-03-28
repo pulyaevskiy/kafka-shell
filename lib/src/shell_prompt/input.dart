@@ -63,11 +63,9 @@ class ShellInput {
     };
   }
 
-  Future listen() async {
-    var completer = new Completer();
-
+  StreamSubscription<List<int>> listen() {
     _printPrompt();
-    stdin.asBroadcastStream().listen((List<int> _) async {
+    var sub = stdin.asBroadcastStream().listen((List<int> _) async {
       if (_submitInProgress) return;
 
       var str;
@@ -91,7 +89,7 @@ class ShellInput {
       }
     });
 
-    return completer.future;
+    return sub;
   }
 
   _printPrompt() {

@@ -54,7 +54,13 @@ class Shell {
     commands[name] = command;
   }
 
+  StreamSubscription<List<int>> _inputSubscription;
+
   void run() {
-    _input.listen();
+    _inputSubscription = _input.listen();
+  }
+
+  void cancel() {
+    _inputSubscription?.cancel();
   }
 }

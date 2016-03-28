@@ -39,6 +39,10 @@ class KafkaShell {
     _shell = new Shell(prompt: new KafkaPrompt(context));
   }
 
+  void cancel() {
+    _shell.cancel();
+  }
+
   Future run() async {
     print('Kafka Shell v1.0.0-dev');
     var session =

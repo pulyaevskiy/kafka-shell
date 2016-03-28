@@ -16,17 +16,13 @@ main(List<String> arguments) async {
   }
   var config = {'host': results['host'], 'port': int.parse(results['port'])};
 
-  try {
-    var shell = new KafkaShell(config);
-    shell.run().then((_) {
-      exit(0);
-    }, onError: (e, StackTrace trace) {
-      print(e);
-      print(trace);
-      exit(1);
-    });
-  } catch (e) {
+  var shell = new KafkaShell(config);
+  shell.run().then((_) {
+    exit(0);
+  }, onError: (e, StackTrace trace) {
+    shell.cancel();
     print(e);
+    print(trace);
     exit(1);
-  }
+  });
 }
