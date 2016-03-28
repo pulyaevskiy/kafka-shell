@@ -56,8 +56,9 @@ class Shell {
 
   StreamSubscription<List<int>> _inputSubscription;
 
-  void run() {
+  Future run() {
     _inputSubscription = _input.listen();
+    return _inputSubscription.asFuture();
   }
 
   void cancel() {

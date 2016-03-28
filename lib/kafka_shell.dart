@@ -63,6 +63,6 @@ class KafkaShell {
       ..addCommand('partitions', new PartitionsCommand(session, context))
       ..addCommand('offsets', new OffsetsCommand(session, context));
 
-    _shell.run();
+    return _shell.run();
   }
 }
