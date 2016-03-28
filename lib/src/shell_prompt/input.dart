@@ -108,6 +108,7 @@ class ShellInput {
           _submitInProgress = false;
           _value = '';
           cursor.position = 0;
+          _printPrompt();
         });
       }
     } finally {
@@ -115,7 +116,6 @@ class ShellInput {
       _value = '';
       cursor.position = 0;
     }
-    _printPrompt();
   }
 
   _beep() {
