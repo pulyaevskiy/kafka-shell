@@ -11,11 +11,12 @@
 
 ## Commands available when global topic context is used.
 
-- `offsets` - shortcut for `topics <topic> offsets`
-- `partitions` - shortcut for `topics <topic> partitions`
-- `fetch [from <partition>] [starting at <offset|earliest>] [limit <num>]`
+- `offsets` - alias for `topics <topic> offsets`
+- `partitions` - alias for `topics <topic> partitions`
+- `fetch [partition <id>] [from <offset>|earliest] [limit <num>] [as plain|json]`
 
 ## Commands available when global consumerGroup context is used.
 
 - `status` - shows overview of consumer and topic offsets
 - `reset offset [on <partition>] to <offset|earliest|latest>`
+- `consume [partition <id>] [limit <num>] [and commit]`

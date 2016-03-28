@@ -1,0 +1,26 @@
+import 'dart:io';
+import 'package:args/args.dart';
+import 'package:kafka_shell/kafka_shell.dart';
+
+main(List<String> arguments) async {
+  var parser = new ArgParser();
+  parser.addOption('host',
+      abbr: 'h', help: 'Hostname or IP address of Kafka broker (required)');
+  parser.addOption('port',
+      abbr: 'p', help: 'Port of Kafka broker', defaultsTo: '9092');
+
+  var results = parser.parse(arguments);
+  if (results['host'] == null) {
+    print(parser.usage);
+    exit(1);
+  }
+  var config = {'host': results['host'], 'port': int.parse(results['port'])};
+
+  try {
+    var shell = new KafkaShell(config);
+    shell.run();
+  } catch (e) {
+    print(e);
+    exit(1);
+  }
+}

@@ -12,7 +12,8 @@ class FetchCommand implements ShellCommand {
   }
 
   void printUsage(Stdout output) {
-    output.writeln('Usage: fetch <topic> [<partition>]');
+    output.writeln(
+        'Usage: fetch [partition <id>] [from <offset>|earliest] [limit <num>] [as plain|json]');
   }
 
   @override
