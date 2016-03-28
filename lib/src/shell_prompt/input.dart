@@ -87,7 +87,7 @@ class ShellInput {
         // print(_);
         _handleInsert(str);
       }
-    });
+    }, cancelOnError: true);
 
     return sub;
   }
