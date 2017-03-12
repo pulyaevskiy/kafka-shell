@@ -2,6 +2,10 @@
 
 Command-line shell for Apache Kafka.
 
+> Current status: this library is on pause and waiting for kafka client refactor to Kafka 0.10
+> APIs. To follow progress on the client check out this [PR](https://github.com/dart-drivers/kafka/pull/13)
+> Once, there is first public alpha of the Kafka client the shell work will be resumed.
+
 [![asciicast](https://asciinema.org/a/d95xyhz034nmsaqjwzw6g74tt.png)](https://asciinema.org/a/d95xyhz034nmsaqjwzw6g74tt)
 
 ## Dependencies
